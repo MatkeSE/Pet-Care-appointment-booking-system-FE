@@ -2,38 +2,38 @@ import React, { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import VeterinarianCard from "./VeterinarianCard";
 import { getVeterinarians } from "./VeterinarianService";
-//import VeterinarianSearch from "./VeterinarianSearch";
-//import UseMessageAlerts from "../hooks/UseMessageAlerts";
+import VeterinarianSearch from "./VeterinarianSearch";
+import UseMessageAlerts from "../hooks/UseMessageAlerts";
 
 const VeterinarianListing = () => {
   const [veterinarians, setVeterinarians] = useState([]);
-  //const [allVeterinarians, setAllVeterinarians] = useState([]);
-  const { errorMessage, setErrorMessage, showErrorAlert, setShowErrorAlert } = useState("");
-   // UseMessageAlerts();
+  const [allVeterinarians, setAllVeterinarians] = useState([]);
+  const { errorMessage, setErrorMessage, showErrorAlert, setShowErrorAlert } =
+    UseMessageAlerts();
 
   useEffect(() => {
     getVeterinarians()
       .then((data) => {
         setVeterinarians(data.data);
-        //setAllVeterinarians(data.data);
+        setAllVeterinarians(data.data);
       })
       .catch((error) => {
-        setErrorMessage(error.message);
-        //setShowErrorAlert(true);
+        setErrorMessage(error.response.data.message);
+        setShowErrorAlert(true);
       });
   }, []);
 
 
-//   const handleSearchResult = (veterinarians) => {
-//     if (veterinarians === null) {
-//       setVeterinarians(allVeterinarians);
-//     } else if (Array.isArray(veterinarians) && veterinarians.length > 0) {
-//       setVeterinarians(veterinarians);
-//     } else {
-//        setVeterinarians([]);
-//     }
+  const handleSearchResult = (veterinarians) => {
+    if (veterinarians === null) {
+      setVeterinarians(allVeterinarians);
+    } else if (Array.isArray(veterinarians) && veterinarians.length > 0) {
+      setVeterinarians(veterinarians);
+    } else {
+       setVeterinarians([]);
+    }
    
-//   };
+  };
 
   
 
@@ -49,7 +49,7 @@ const VeterinarianListing = () => {
 
       <Row className='justify-content-center'>
         <Col md={4}>
-        {/* <VeterinarianSearch onSearchResult={handleSearchResult} /> */}
+          <VeterinarianSearch onSearchResult={handleSearchResult} />
         </Col>
         <Col md={7}>
           {veterinarians.map((vet, index) => (

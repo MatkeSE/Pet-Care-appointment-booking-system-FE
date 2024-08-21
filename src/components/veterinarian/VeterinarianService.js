@@ -11,15 +11,15 @@ export async function getVeterinarians() {
   }
 }
 
-// export async function findAvailableVeterinarians(searchParams) {
-//   try {
-//     const queryParams = new URLSearchParams(searchParams);
+export async function findAvailableVeterinarians(searchParams) {
+  try {
+    const queryParams = new URLSearchParams(searchParams);
 
-//     const result = await api.get(
-//       `/veterinarians/search-veterinarian?${queryParams}`
-//     );
-//     return result.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+    const result = await api.get(
+      `/veterinarians/search-veterinarian?${queryParams}`
+    );
+    return result.data;
+  } catch (error) {
+    throw error;
+  }
+}
