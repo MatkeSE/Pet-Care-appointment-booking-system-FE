@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import bg1 from "../../assets/images/bg1.png";
 import bg from "../../assets/images/bg.jpg";
 import bg3 from "../../assets/images/bg3.png";

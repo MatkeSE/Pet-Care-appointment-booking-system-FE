@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
 import AlertMessage from "../common/AlertMessage";
 import { findAvailableVeterinarians } from "./VeterinarianService";
+import { dateTimeFormatter } from "../utils/utilities";
 
 const VeterinarianSearch = ({ onSearchResult }) => {
   const [searchQuery, setSearchQuery] = useState({
@@ -21,12 +22,19 @@ const VeterinarianSearch = ({ onSearchResult }) => {
     setSearchQuery({ ...searchQuery, [e.target.name]: e.target.value });
   };
 
-  const handleDateChange = (date) => {
-    setSearchQuery({ ...searchQuery, date });
-  };
-  const handleTimeChange = (time) => {
-    setSearchQuery({ ...searchQuery, time });
-  };
+   const handleDateChange = (date) => {
+     setSearchQuery((prevState) => ({
+       ...prevState,
+       date: date,
+     }));
+   };
+
+   const handleTimeChange = (time) => {
+     setSearchQuery((prevState) => ({
+       ...prevState,
+       date: time,
+     }));
+   };
 
   const handleDateTimeToggle = (e) => {
     const isChecked = e.target.checked;
@@ -38,14 +46,15 @@ const VeterinarianSearch = ({ onSearchResult }) => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
+    const { date, time } = searchQuery;
+    const{formattedDate, formattedTime} = dateTimeFormatter(date, time)
+
     let searchParams = { specialization: searchQuery.specialization };
 
-    if (searchQuery.date) {
-      const formattedDate = format(searchQuery.date, "yyyy-MM-dd");
+    if (searchQuery.date) {     
       searchParams.date = formattedDate;
     }
-    if (searchQuery.time) {
-      const formattedTime = format(searchQuery.time, "HH:mm");
+    if (searchQuery.time) {     
       searchParams.time = formattedTime;
     }
     try {
@@ -80,8 +89,8 @@ const VeterinarianSearch = ({ onSearchResult }) => {
             value={searchQuery.specialization}
             onChange={handleInputchange}>
             <option value=''>Select Specialization</option>
-            <option value='hirurg'>hirurg</option>
-            <option value='urolog'>urolog</option>
+            <option value='Surgeon'>Surgeon</option>
+            <option value='Urologist'>Urologist</option>
             <option value='Other'>Other</option>
           </Form.Control>
         </Form.Group>
