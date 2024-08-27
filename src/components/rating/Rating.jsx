@@ -22,9 +22,9 @@ const Rating = ({ veterinarianId, onReviewSubmit }) => {
     setShowErrorAlert,
   } = UseMessageAlerts();
 
-  const reviewerId = 4;
+   const reviewerId = 3;
 
-  // const{veterinarianId} = useParams()
+  //  const{veterinarianId} = useParams()
 
    const handleRatingChange = (value) => {  
     setRating(value);  
@@ -38,7 +38,7 @@ const Rating = ({ veterinarianId, onReviewSubmit }) => {
     e.preventDefault();
 
     const reviewInfo = {
-      rating: rating,
+      stars: rating,
       feedback: feedback,
     };
 
