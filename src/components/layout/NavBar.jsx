@@ -1,8 +1,11 @@
 import React from 'react';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const NavBar = () => {
+
+  const {userId} = useParams();
+
     return (
       <Navbar expand='lg' sticky='top' className='nav-bg'>
         <Container>
@@ -29,7 +32,7 @@ const NavBar = () => {
                   Login
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item to={"/user-dashboard"} as={Link}>
+                <NavDropdown.Item to={'/user-dashboard/${userId}/my-dashboard'} as={Link}>
                   My Dashboard
                 </NavDropdown.Item>
                 <NavDropdown.Divider />

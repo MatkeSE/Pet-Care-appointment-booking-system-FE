@@ -18,23 +18,24 @@ export async function registerUser(user) {
   }
 }
 
-// export async function changeUserPassword(
-//   userId,
-//   currentPassword,
-//   newPassword,
-//   confirmNewPassword
-// ) {
-//   try {
-//     const requestData = { currentPassword, newPassword, confirmNewPassword };
-//     const result = await api.put(
-//       `/users/user/${userId}/change-password`,
-//       requestData
-//     );
-//     return result.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+export async function changeUserPassword(
+  userId,
+  currentPassword,
+  newPassword,
+  confirmNewPassword
+) {
+  try {
+    const requestData = { currentPassword, newPassword, confirmNewPassword };
+    const result = await api.put(
+      `/users/user/${userId}/change-password`,
+      requestData
+    );
+    return result.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // export async function updateUser(userData, userId) {
 //   try {
 //     const response = await api.put(`/users/user/${userId}/update`, userData);
