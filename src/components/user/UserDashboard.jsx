@@ -3,8 +3,8 @@ import { Container, Tabs, Tab, Col, Row, Card } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import UserProfile from "./UserProfile";
 import UseMessageAlerts from "../hooks/UseMessageAlerts";
-import { getUserById } from "./UserService";
-// import { deleteUserPhoto } from "../modals/ImageUploaderService";
+import { getUserById, deleteUser } from "./UserService";
+import { deleteUserPhoto } from "../modals/ImageUploaderService";
 import AlertMessage from "../common/AlertMessage";
 // import Review from "../review/Review";
 // import UserAppointments from "../appointment/UserAppointments";
@@ -34,7 +34,7 @@ const UserDashboard = () => {
   } = UseMessageAlerts();
 
    // const { userId } = useParams();
-  const userId = 4;
+  const userId = 1;
 
   useEffect(() => {
     const getUser = async () => {
@@ -76,30 +76,31 @@ const UserDashboard = () => {
 //   }, [user]);
 
 
-//   const handleRemovePhoto = async () => {
-//     try {
-//       const result = await deleteUserPhoto(user.photoId, userId);
-//       setSuccessMessage(result.message);
-//       window.location.reload();
-//       setShowSuccessAlert(true);
-//     } catch (error) {
-//       setErrorMessage(error.message);
-//       setShowErrorAlert(true);
-//       console.error(error.message);
-//     }
-//   };
+  const handleRemovePhoto = async () => {
+    try {
+      const result = await deleteUserPhoto(user.photoId, 3);
+      setSuccessMessage(result.message);
+      window.location.reload();
+      setShowSuccessAlert(true);
+    } catch (error) {
+      setErrorMessage(error.message);
+      setShowErrorAlert(true);
+      console.error(error.message);
+    }
+  };
 
-//   const handleDeleteAccount = async () => {
-//     try {
-//       const response = await deleteUser(userId);
-//       setSuccessMessage(response.message);
-//       setShowSuccessAlert(true);
-//     } catch (error) {
-//       setErrorMessage(error.message);
-//       setShowErrorAlert(true);
-//       console.error(error.message);
-//     }
-//   };
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await deleteUser(userId);
+      setSuccessMessage(response.message);
+      setShowSuccessAlert(true);
+    } catch (error) {
+      console.log("This is the error",error);
+      setErrorMessage(error.message);
+      setShowErrorAlert(true);
+      console.error(error.message);
+    }
+  };
 
 //   const handleTabSelect = (key) => {
 //     setActiveKey(key);
@@ -108,12 +109,20 @@ const UserDashboard = () => {
 
   return (
     <Container className='mt-2 user-dashboard'>
-     
+     {showErrorAlert && (
+        <AlertMessage type={"danger"} message={errorMessage} />
+      )}
+
+      {showSuccessAlert && (
+        <AlertMessage type={"success"} message={successMessage} />
+      )}
       <Tabs>
         <Tab eventKey='profile' title={<h3>Profile</h3>}>
           {user && (
             <UserProfile
-              user={user}
+              user={user} 
+              handleRemovePhoto={handleRemovePhoto}
+              handleDeleteAccount={handleDeleteAccount}
             />
           )}
         </Tab>

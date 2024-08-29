@@ -36,20 +36,23 @@ export async function changeUserPassword(
   }
 }
 
-// export async function updateUser(userData, userId) {
-//   try {
-//     const response = await api.put(`/users/user/${userId}/update`, userData);
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
+export async function updateUser(userData, userId) {
+  try {
+    const response = await api.put(`/users/user/${userId}/update`, userData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
-// export async function deleteUser(userId) {
-//   try {
-//     const response = await api.delete(`/users/user/${userId}/delete`);
-//     return response.data;
-//   } catch (error) {
-//     throw error;
-//   }
-//  }
+export async function deleteUser(userId) {
+  try {
+    const response = await api.delete(`/users/user/${userId}/delete`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+ }
+
+
+

@@ -4,14 +4,15 @@ import { Link } from "react-router-dom";
 import ImageUploaderModal from "../modals/ImageUploaderModal";
 import ChangePasswordModal from "../modals/ChangePasswordModal";
 import { Col, Row, Card, ListGroup, Button, Container } from "react-bootstrap";
-// import DeleteConfirmationModal from "../modals/DeleteConfirmationModal";
+import { deleteUserPhoto } from "../modals/ImageUploaderService";
+import DeleteConfirmationModal from "../modals/DeleteConfirmationModal";
 // import style from "../../components/user/UserProfile.module.css";
 
 const UserProfile = ({ user, handleRemovePhoto, handleDeleteAccount }) => {
   const [showImageUploaderModal, setShowImageUploaderModal] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
-//   const [showDeleteModal, setShowDeleteModal] = useState(false);
-//   const [userToDelete, setUserToDelete] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
   // const navigate = useNavigate();
 
@@ -29,28 +30,35 @@ const UserProfile = ({ user, handleRemovePhoto, handleDeleteAccount }) => {
     setShowChangePasswordModal(false);
   };
 
-//   const handleCloseDeleteModal = () => {
-//     setShowDeleteModal(false);
-//   };
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+  };
 
-//   const handleShowDeleteModal = (userId) => {
-//     setUserToDelete(userId);
-//     setShowDeleteModal(true);
-//   };
+  const handleShowDeleteModal = (userId) => {
+    setUserToDelete(userId);
+    setShowDeleteModal(true);
+  };
 
-//   const handleDeleteAndCloseModal = async () => {
-//     try {
-//       await handleDeleteAccount();
-//       setShowDeleteModal(false);
-//     } catch (error) {
-//       console.error(error.message);
-//     }
-//   };
+  const handleDeleteAndCloseModal = async () => {
+    try {
+      await handleDeleteAccount();
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
-console.log("The user data:", user);
+
+
+
   return (
     <Container>
-    
+     <DeleteConfirmationModal
+        show={showDeleteModal}
+        onHide={handleCloseDeleteModal}
+        onConfirm={handleDeleteAndCloseModal}
+        itemToDelete={"user account"}
+      />
       <React.Fragment>
         <Row>
           <Col md={3}>
@@ -73,7 +81,7 @@ console.log("The user data:", user);
                 />
                 <p>
                   {" "}
-                  <Link to={"#"} onClick={""}>
+                  <Link to={"#"} onClick={handleRemovePhoto}>
                     Remove Photo
                   </Link>
                 </p>
@@ -137,7 +145,61 @@ console.log("The user data:", user);
                   <Card.Text>{user.userType}</Card.Text>
                 </Col>
               </Card.Body>
-          </Card>
+              {user.userType === "VET" && (
+                <Card.Body className='d-flex align-items-center'>
+                  <Col md={4}>Specialization : </Col>
+                  <Col md={4}>
+                    <Card.Text>{user.specialization}</Card.Text>
+                  </Col>
+                </Card.Body>
+              )}
+
+              <Card.Body className='d-flex align-items-center'>
+                <Col md={4}>Account status : </Col>
+                <Col md={4}>
+                  <Card.Text
+                    className={user.enabled ? "active" : "inactive"}>
+                    {user.enabled ? "Active" : "Inactive"}
+                  </Card.Text>
+                </Col>
+              </Card.Body>
+            </Card>
+
+            <Card className='mb-3 shadow'>
+              <Card.Body className='d-flex align-items-center'>
+                <Col md={2}>Role(s) :</Col>
+                <Col md={4}>
+                  <ListGroup variant='flush'>
+                    {user.roles &&
+                      user.roles.map((role, index) => (
+                        <ListGroup.Item key={index} className='text-success'>
+                          {role ? role.replace("ROLE_", "") : ""}
+                        </ListGroup.Item>
+                      ))}
+                  </ListGroup>
+                </Col>
+              </Card.Body>
+            </Card>
+
+            <Card.Body>
+              <div className='d-flex justify-content-center mb-4'>
+                <div className='mx-2'>
+                  <Link
+                    to={`/update-user/${user.id}/update`}
+                    className='btn btn-warning btn-sm'>
+                    Edit profile
+                  </Link>
+                </div>
+                <div className='mx-2'>
+                  <Button
+                    variant='danger'
+                    size='sm'
+                    onClick={handleDeleteAccount}>
+                    Close account
+                  </Button>
+                </div>
+              </div>
+          </Card.Body>
         </Col>
       </Row>
       </React.Fragment>

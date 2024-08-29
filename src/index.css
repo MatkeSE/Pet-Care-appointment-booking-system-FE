@@ -166,6 +166,16 @@ h6 {
   margin-top: auto;
 }
 
+.inactive{
+  color: orange;
+  font-weight: bold;
+}
+
+.active{
+  color: green;
+  font-weight: bold;
+}
+
 /* Start search component*/
 .searchText {
   color: #daa520;

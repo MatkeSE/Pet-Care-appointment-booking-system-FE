@@ -25,7 +25,7 @@ const ImageUploaderModal = ({ userId, show, handleClose }) => {
 
   const getUser = async () => {
     try {
-      const result = getUserById(4);
+      const result = getUserById(3);
       setSuccessMessage(result.data);
     } catch (error) {
       setErrorMessage(error.message);
@@ -49,13 +49,13 @@ const ImageUploaderModal = ({ userId, show, handleClose }) => {
         reader.readAsArrayBuffer(file);
         reader.onload = async (e) => {
           const fileBytes = new Uint8Array(e.target.result);
-          const response = await updateUserPhoto(4, fileBytes);
+          const response = await updateUserPhoto(3, fileBytes);
           setSuccessMessage(response.data);
           window.location.reload();
           setShowSuccessAlert(true);
         };
       } else {
-        const response = await uploadUserPhoto(4, file);
+        const response = await uploadUserPhoto(3, file);
         setSuccessMessage(response.data);
         window.location.reload();
         setShowSuccessAlert(true);
