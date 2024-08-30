@@ -38,7 +38,7 @@ const ChangePasswordModal = ({ userId, show, handleClose }) => {
 
     try {
       const response = await changeUserPassword(
-        4,
+        6,
         passwords.currentPassword,
         passwords.newPassword,
         passwords.confirmNewPassword

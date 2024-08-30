@@ -6,8 +6,8 @@ import UseMessageAlerts from "../hooks/UseMessageAlerts";
 import { getUserById, deleteUser } from "./UserService";
 import { deleteUserPhoto } from "../modals/ImageUploaderService";
 import AlertMessage from "../common/AlertMessage";
-// import Review from "../review/Review";
-// import UserAppointments from "../appointment/UserAppointments";
+import Review from "../review/Review";
+import UserAppointments from "../appointment/UserAppointments";
 // import CustomPieChart from "../charts/CustomPieChart";
 // import { formatAppointmentStatus } from "../utils/utilities";
 // import NoDataAvailable from "../common/NoDataAvailable";
@@ -15,7 +15,7 @@ import AlertMessage from "../common/AlertMessage";
 const UserDashboard = () => {
   const [user, setUser] = useState(null);
 
-//   const [appointments, setAppointments] = useState([]);
+  const [appointments, setAppointments] = useState([]);
 //    const [appointmentData, setAppointmentData] = useState([]);  
 //   const [activeKey, setActiveKey] = useState(() => {
 //     const storedActiveKey = localStorage.getItem("activeKey");
@@ -34,7 +34,7 @@ const UserDashboard = () => {
   } = UseMessageAlerts();
 
    // const { userId } = useParams();
-  const userId = 1;
+  const userId = 10;
 
   useEffect(() => {
     const getUser = async () => {
@@ -42,6 +42,7 @@ const UserDashboard = () => {
         console.log("The user id from the dashboard:", userId);
         const data = await getUserById(userId);
         setUser(data.data);
+        setAppointments(data.data.appointments);
         console.log("The user data from the dashboard:", user);
 
       } catch (error) {
@@ -78,7 +79,7 @@ const UserDashboard = () => {
 
   const handleRemovePhoto = async () => {
     try {
-      const result = await deleteUserPhoto(user.photoId, 3);
+      const result = await deleteUserPhoto(user.photoId, 10);
       setSuccessMessage(result.message);
       window.location.reload();
       setShowSuccessAlert(true);
@@ -102,36 +103,78 @@ const UserDashboard = () => {
     }
   };
 
-//   const handleTabSelect = (key) => {
-//     setActiveKey(key);
-//     localStorage.setItem("activeKey", key);
-//   };
 
-  return (
-    <Container className='mt-2 user-dashboard'>
-     {showErrorAlert && (
-        <AlertMessage type={"danger"} message={errorMessage} />
-      )}
+return (
+  <Container className='mt-2 user-dashboard'>
+    {showErrorAlert && (
+      <AlertMessage type={"danger"} message={errorMessage} />
+    )}
 
-      {showSuccessAlert && (
-        <AlertMessage type={"success"} message={successMessage} />
-      )}
-      <Tabs>
-        <Tab eventKey='profile' title={<h3>Profile</h3>}>
-          {user && (
-            <UserProfile
-              user={user} 
-              handleRemovePhoto={handleRemovePhoto}
-              handleDeleteAccount={handleDeleteAccount}
-            />
-          )}
-        </Tab>
-      </Tabs>
-    </Container>
-  )
+    {showSuccessAlert && (
+      <AlertMessage type={"success"} message={successMessage} />
+    )}
+    <Tabs>
+      <Tab eventKey='profile' title={<h3>Profile</h3>}>
+        {user && (
+          <UserProfile
+            user={user}
+            handleRemovePhoto={handleRemovePhoto}
+            handleDeleteAccount={handleDeleteAccount}
+          />
+        )}
+      </Tab>
+      <Tab eventKey='status' title={<h3>Appointments</h3>}>
+        <Row>
+          <Col>
+            {/* {appointmentData && appointmentData.length > 0 ? (
+              <CustomPieChart data={appointmentData} />
+            ) : (
+              <NoDataAvailable dataType={"appointment data"} />
+            )} */}
+          </Col>
+        </Row>
+      </Tab>
 
+      <Tab eventKey='appointments' title={<h3>Appointment Details</h3>}>
+        <Row>
+          <Col>
+            {user && (
+              <React.Fragment>
+                {appointments && appointments.length > 0 ? (
+                  <UserAppointments user={user} appointments={appointments} />
+                ) : (
+                  <p>
+                    No data.
+                  </p>
+                )}
+              </React.Fragment>
+            )}
+          </Col>
+        </Row>
+      </Tab>
+
+      <Tab eventKey='reviews' title={<h3>Reviws</h3>}>
+        <Container className='d-flex justify-content-center align-items-center'>
+          <Card className='mt-5 mb-4 review-card'>
+            <h4 className='text-center mb-2'>Your Reviews</h4>
+            <hr />
+            <Row>
+              <Col>
+                {user && user.reviews && user.reviews.length > 0 ? (
+                  user.reviews.map((review, index) => (
+                    <Review key={index} review={review} />
+                  ))
+                ) : (
+                  <p>No no</p>
+                )}
+              </Col>
+            </Row>
+          </Card>
+        </Container>
+      </Tab>
+    </Tabs>
+  </Container>
+);
 };
-    
-
 
 export default UserDashboard;

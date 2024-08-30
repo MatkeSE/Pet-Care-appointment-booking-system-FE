@@ -50,7 +50,7 @@ const UserProfile = ({ user, handleRemovePhoto, handleDeleteAccount }) => {
 
 
 
-
+console.log("Data from user", user )
   return (
     <Container>
      <DeleteConfirmationModal

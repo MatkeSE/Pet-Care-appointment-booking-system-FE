@@ -166,15 +166,7 @@ h6 {
   margin-top: auto;
 }
 
-.inactive{
-  color: orange;
-  font-weight: bold;
-}
-
-.active{
-  color: green;
-  font-weight: bold;
-}
+* End active and inactive users status */
 
 /* Start search component*/
 .searchText {
