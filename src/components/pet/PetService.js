@@ -5,9 +5,10 @@ export async function getAllPetTypes() {
     const result = await api.get("/pets/get-types");
     return result.data;
   } catch (error) {
-      throw error;
+    throw error;
   }
 }
+
 
 export async function getAllPetColors() {
   try {
@@ -45,3 +46,12 @@ export const deletePet = async (id) => {
   }
 };
 
+export async function addPet(appointmentId,petData) {
+  try {
+    console.log("The pet data:",appointmentId,  petData);
+    const response = await api.post(`/pets/save-pets?appointmentId=${appointmentId}`,petData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

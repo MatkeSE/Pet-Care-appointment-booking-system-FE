@@ -9,7 +9,7 @@ import {
 import { getAggregatedUsersAccountByActiveStatus } from '../user/UserService';
 
 const AccountChart = () => {
-    const [accountData, setAccountData] = useState([]);
+     const [accountData, setAccountData] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     
   useEffect(() => {

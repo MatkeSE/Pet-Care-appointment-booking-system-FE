@@ -46,8 +46,7 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
   const { recipientId } = useParams();
 
   const fetchAppointment = async (appointmentId) => {
-    try {
-      console.log("The appointment Id :", appointmentId);
+    try {     
       const response = await getAppointmentById(appointmentId);
       const updatedAppointment = response.data;
       setAppointments(
@@ -74,43 +73,33 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
     }
   };
 
-  // For Vets:
-
-  // Aprrove Appointment.
+  
   const handleDeclineAppointment = async (appointmentId) => {
     try {
-      const response = await declineAppointment(appointmentId);
-      console.log("The cancellation response: ", response);
+      const response = await declineAppointment(appointmentId);      
       setSuccessMessage(response.message);
       setShowSuccessAlert(true);
-    } catch (error) {
-      console.log("The decline error: ", error);
+    } catch (error) {      
       setErrorMessage(error.response.data.message);
       setShowErrorAlert(true);
     }
   };
 
-  //Decline Appointment
+  
   const handleApproveAppointment = async (appointmentId) => {
     try {
-      const response = await approveAppointment(appointmentId);
-      console.log("The cancellation response: ", response);
+      const response = await approveAppointment(appointmentId);      
       setSuccessMessage(response.message);
       setShowSuccessAlert(true);
-    } catch (error) {
-      console.log("The decline error: ", error);
+    } catch (error) {      
       setErrorMessage(error.response.data.message);
       setShowErrorAlert(true);
     }
   };
-
-  //Patients:
-  // Cancel Appointment
 
   const handleCancelAppointment = async (id) => {
     try {
-      const response = await cancelAppointment(id);
-      console.log("The cancellation response: ", response);
+      const response = await cancelAppointment(id);    
       setSuccessMessage(response.message);
       setShowSuccessAlert(true);
     } catch (error) {
@@ -119,7 +108,6 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
     }
   };
 
-  //Update Appointment
   const handleUpdateAppointment = async (updatedAppointment) => {
     try {
       const result = await updateAppointment(
@@ -133,7 +121,6 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
             : appointment
         )
       );
-      console.log("The result from update :", result);
       setSuccessMessage(result.data.message);
       setShowSuccessAlert(true);
     } catch (error) {
@@ -241,8 +228,7 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
                     <p>Reason: {appointment.reason}</p>
                   </Col>
 
-                  <Col md={8} className='mt-2'>
-                    <h4>Pets:</h4>
+                  <Col md={8} className='mt-2'>                    
                     <PetsTable
                       pets={appointment.pets}
                       onPetsUpdate={handlePetsUpdate}
@@ -303,5 +289,3 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
 };
 
 export default UserAppointments;
-
-

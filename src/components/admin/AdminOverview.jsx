@@ -79,7 +79,6 @@ const AdminOverview = () => {
         <div className='chart-container'>
           <AccountChart />
         </div>
-
         <div className='chart-container'>
           <VetSpecializationChart />
         </div>

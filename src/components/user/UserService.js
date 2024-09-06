@@ -51,8 +51,9 @@ export async function deleteUser(userId) {
   } catch (error) {
     throw error;
   }
- }
- export async function countVeterinarians() {
+}
+
+export async function countVeterinarians() {
   try {
     const result = await api.get("/users/count/veterinarians");
     return result.data;

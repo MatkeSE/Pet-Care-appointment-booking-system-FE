@@ -33,15 +33,14 @@ const UserDashboard = () => {
   } = UseMessageAlerts();
 
   // const { userId } = useParams();
-  const userId = 10;
+  const userId = 4;
 
   useEffect(() => {
     const getUser = async () => {
       try {
         const data = await getUserById(userId);
         setUser(data.data);
-        setAppointments(data.data.appointments);
-        console.log("The user data from the dashboard:", data.data);
+        setAppointments(data.data.appointments);       
       } catch (error) {
         setErrorMessage(error.response.data.message);
         setShowErrorAlert(true);
@@ -68,8 +67,7 @@ const UserDashboard = () => {
 
       const transformedData = Object.values(statusCounts);
       setAppointmentData(transformedData);
-      setAppointments(user.appointments);
-      console.log("Here is the transform data: ", transformedData);
+      setAppointments(user.appointments);     
     }
   }, [user]);
 
@@ -127,8 +125,9 @@ const UserDashboard = () => {
             />
           )}
         </Tab>
-        <Tab eventKey='status' title={<h3>Appointments</h3>}>
+        <Tab eventKey='status' title={<h3>Appointments Overview</h3>}>
           <Row>
+            <h4 className='text-center mt-4'>Appointment Overview</h4>
             <Col>
               {appointmentData && appointmentData.length > 0 ? (
                 <CustomPieChart data={appointmentData} />
