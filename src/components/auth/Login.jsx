@@ -1,13 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsPersonFill, BsLockFill } from "react-icons/bs";
-import { Container, Row, Col, Card, Form, Button, InputGroup } from "react-bootstrap"
-import { Link } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Form,
+  Button,
+  InputGroup,
+} from "react-bootstrap";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { loginUser } from "./AuthService";
+import UseMessageAlerts from "../hooks/UseMessageAlerts";
+import AlertMessage from "../common/AlertMessage";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
+
+  const { errorMessage, setErrorMessage, showErrorAlert, setShowErrorAlert } =
+    UseMessageAlerts();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const from = location.state?.from?.pathname || "/";
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -16,14 +37,52 @@ const Login = () => {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    const isAthenticated = localStorage.getItem("authToken");
+    if (isAthenticated) {
+      navigate(from, { replace: true });
+    }
+  });
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!credentials.email || !credentials.password) {
+      setErrorMessage("Please, enter a valid username and paasword");
+      setShowErrorAlert(true);
+      return;
+    }
+    try {
+      const data = await loginUser(credentials.email, credentials.password);
+      localStorage.setItem("authToken", data.token);
+      const decoded = jwtDecode(data.token);
+      localStorage.setItem("userRoles", JSON.stringify(decoded.roles));
+      localStorage.setItem("userId", decoded.id);
+      clearLoginForm();
+      navigate(from, { replace: true });
+      // window.location.reload;
+    } catch (error) {
+      setErrorMessage(error.response.data.data);
+      setShowErrorAlert(true);
+    }
+  };
+
+  const clearLoginForm = () => {
+    setCredentials({ email: "", password: "" });
+    setShowErrorAlert(false);
+  };
+
   return (
     <Container className='mt-5'>
       <Row className='justify-content-center'>
         <Col sm={6}>
           <Card>
+          {showErrorAlert && (
+              <AlertMessage type={"danger"} message={errorMessage} />
+            )}
             <Card.Body>
               <Card.Title className='text-center mb-4'>Login</Card.Title>
-              <Form>
+              <Form onSubmit={handleLogin}>
                 <Form.Group className='mb-3' controlId='username'>
                   <Form.Label>Username</Form.Label>
                   <InputGroup>

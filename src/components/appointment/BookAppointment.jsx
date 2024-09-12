@@ -48,7 +48,7 @@ const BookAppointment = () => {
   } = UseMessageAlerts();
 
   const { recipientId } = useParams();
-  const senderId = 4;
+  const senderId = 36;
 
   const handleDateChange = (date) => {
     setFormData((prevState) => ({
@@ -138,8 +138,13 @@ const BookAppointment = () => {
       handleReset();
       setShowSuccessAlert(true);
     } catch (error) {
-      setErrorMessage(error.response.data.message);
-      setShowErrorAlert(true);
+      if (error.response.data.status === 401) {
+        setErrorMessage("Please, login to book appointment");
+        setShowErrorAlert(true);
+      } else {
+        setErrorMessage(error.response.data.message);
+        setShowErrorAlert(true);
+      }
     } finally {
       setIsProcessing(false);
     }

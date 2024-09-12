@@ -42,17 +42,21 @@ const Rating = ({ veterinarianId, onReviewSubmit }) => {
       feedback: feedback,
     };
 
-    try {
-      console.log("The riview info", reviewInfo);
+    try {     
       const response = await addReview(veterinarianId, reviewerId, reviewInfo);
       setSuccessMessage(response.message);
       setShowSuccessAlert(true);
       if (onReviewSubmit) {
         onReviewSubmit();
       }
-    } catch (error) {
-      setErrorMessage(error.message);
-      setShowErrorAlert(true);
+    } catch (error) {     
+      if (error.response.data.status === 401) {
+        setErrorMessage("Please, login to submit a review");
+        setShowErrorAlert(true);
+      } else {
+        setErrorMessage(error.response.data.message);
+        setShowErrorAlert(true);
+      }
     }
   };
 

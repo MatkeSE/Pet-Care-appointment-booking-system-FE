@@ -33,7 +33,7 @@ const UserDashboard = () => {
   } = UseMessageAlerts();
 
   // const { userId } = useParams();
-  const userId = 4;
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const getUser = async () => {
@@ -104,13 +104,6 @@ const UserDashboard = () => {
 
   return (
     <Container className='mt-2 user-dashboard'>
-      {showErrorAlert && (
-        <AlertMessage type={"danger"} message={errorMessage} />
-      )}
-
-      {showSuccessAlert && (
-        <AlertMessage type={"success"} message={successMessage} />
-      )}
       <Tabs
         className='mb-2'
         justify

@@ -76,23 +76,29 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
   
   const handleDeclineAppointment = async (appointmentId) => {
     try {
-      const response = await declineAppointment(appointmentId);      
+      const response = await declineAppointment(appointmentId);
       setSuccessMessage(response.message);
-      setShowSuccessAlert(true);
-    } catch (error) {      
+     setShowErrorAlert(false);
+     setShowSuccessAlert(true);
+    } catch (error) {
       setErrorMessage(error.response.data.message);
+      setShowSuccessAlert(false);
       setShowErrorAlert(true);
     }
   };
 
-  
   const handleApproveAppointment = async (appointmentId) => {
+    setIsProcessing(true);
     try {
-      const response = await approveAppointment(appointmentId);      
+      const response = await approveAppointment(appointmentId);
       setSuccessMessage(response.message);
+      setShowErrorAlert(false);
       setShowSuccessAlert(true);
-    } catch (error) {      
+      setIsProcessing(false);
+    } catch (error) {
       setErrorMessage(error.response.data.message);
+      setIsProcessing(false);
+      setShowSuccessAlert(false);
       setShowErrorAlert(true);
     }
   };
@@ -159,13 +165,6 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
 
   return (
     <Container className='p-3'>
-      {showSuccessAlert && (
-        <AlertMessage type={"success"} message={successMessage} />
-      )}
-      {showErrorAlert && (
-        <AlertMessage type={"danger"} message={errorMessage} />
-      )}
-
       <AppointmentFilter
         onClearFilters={handleClearFilter}
         statuses={statuses}
@@ -245,6 +244,15 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
                     />
                   )}
                 </Row>
+             
+                {showErrorAlert && (
+                  <AlertMessage type={"danger"} message={errorMessage} />
+                )}
+
+                {showSuccessAlert && (
+                  <AlertMessage type={"success"} message={successMessage} />
+                )}
+
                 {user.userType === UserType.PATIENT && (
                   <Link to={`/book-appoitnemnt/${recipientId}/new-appointmnet`}>
                     Book New Apppointment
