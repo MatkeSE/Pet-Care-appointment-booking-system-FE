@@ -11,6 +11,8 @@ import UserAppointments from "../appointment/UserAppointments";
 import CustomPieChart from "../charts/CustomPieChart";
 import { formatAppointmentStatus } from "../utils/utilities";
 import NoDataAvailable from "../common/NoDataAvailable";
+import { logout } from "../auth/AuthService";
+
 
 const UserDashboard = () => {
   const [user, setUser] = useState(null);
@@ -32,8 +34,11 @@ const UserDashboard = () => {
     setShowErrorAlert,
   } = UseMessageAlerts();
 
-  // const { userId } = useParams();
-  const userId = localStorage.getItem("userId");
+  const { userId } = useParams();
+
+  const currentUserId = localStorage.getItem("userId");
+
+  const isCurrentUser = userId === currentUserId;
 
   useEffect(() => {
     const getUser = async () => {
@@ -90,10 +95,13 @@ const UserDashboard = () => {
       const response = await deleteUser(userId);
       setSuccessMessage(response.message);
       setShowSuccessAlert(true);
+      setTimeout(()=>{
+      logout();
+      },5000)
     } catch (error) {
+      console.error("The delete error" ,error);
       setErrorMessage(error.message);
       setShowErrorAlert(true);
-      console.error(error.message);
     }
   };
 
@@ -109,14 +117,23 @@ const UserDashboard = () => {
         justify
         activeKey={activeKey}
         onSelect={handleTabSelect}>
-        <Tab eventKey='profile' title={<h3>Profile</h3>}>
-          {user && (
-            <UserProfile
-              user={user}
-              handleRemovePhoto={handleRemovePhoto}
-              handleDeleteAccount={handleDeleteAccount}
-            />
-          )}
+       <Tab eventKey='profile' title={<h3>Profile</h3>}>
+          <Col>
+            {showErrorAlert && (
+              <AlertMessage type={"danger"} message={errorMessage} />
+            )}
+            {showSuccessAlert && (
+              <AlertMessage type={"success"} message={successMessage} />
+            )}
+
+            {user && (
+              <UserProfile
+                user={user}
+                handleRemovePhoto={handleRemovePhoto}
+                handleDeleteAccount={handleDeleteAccount}
+              />
+            )}
+          </Col>
         </Tab>
         <Tab eventKey='status' title={<h3>Appointments Overview</h3>}>
           <Row>
@@ -131,21 +148,27 @@ const UserDashboard = () => {
           </Row>
         </Tab>
 
-        <Tab eventKey='appointments' title={<h3>Appointment Details</h3>}>
-          <Row>
-            <Col>
-              {user && (
-                <React.Fragment>
-                  {appointments && appointments.length > 0 ? (
-                    <UserAppointments user={user} appointments={appointments} />
-                  ) : (
-                    <NoDataAvailable dataType={"appointment data"} />
-                  )}
-                </React.Fragment>
-              )}
-            </Col>
-          </Row>
-        </Tab>
+        {isCurrentUser && (
+          <Tab eventKey='appointments' title={<h3>Appointment Details</h3>}>
+            {" "}
+            <Row>
+              <Col>
+                {user && (
+                  <React.Fragment>
+                    {appointments && appointments.length > 0 ? (
+                      <UserAppointments
+                        user={user}
+                        appointments={appointments}
+                      />
+                    ) : (
+                      <NoDataAvailable dataType={"appointment data"} />
+                    )}
+                  </React.Fragment>
+                )}
+              </Col>
+            </Row>
+          </Tab>
+        )}
 
         <Tab eventKey='reviews' title={<h3>Reviws</h3>}>
           <Container className='d-flex justify-content-center align-items-center'>

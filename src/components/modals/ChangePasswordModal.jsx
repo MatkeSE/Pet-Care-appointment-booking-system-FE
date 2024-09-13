@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { eyeOff, eyeOn } from "react-icons-kit/feather";
+import { eyeOff, eye } from "react-icons-kit/feather";
 import { Icon } from "react-icons-kit";
 import { changeUserPassword } from "../user/UserService";
 import AlertMessage from "../common/AlertMessage";
@@ -8,7 +8,7 @@ import { Form, Modal, Row, Col, InputGroup, Button } from "react-bootstrap";
 
 const ChangePasswordModal = ({ userId, show, handleClose }) => {
   const [type, setType] = useState("password");
-  const { icon, setIcon } = useState(eyeOff);
+  const [icon, setIcon] = useState(eyeOff);
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
@@ -38,7 +38,7 @@ const ChangePasswordModal = ({ userId, show, handleClose }) => {
 
     try {
       const response = await changeUserPassword(
-        3,
+        userId,
         passwords.currentPassword,
         passwords.newPassword,
         passwords.confirmNewPassword
@@ -56,7 +56,7 @@ const ChangePasswordModal = ({ userId, show, handleClose }) => {
   const handleShowPassword = () => {
     if (type === "password") {
       setType("text");
-      setIcon(eyeOn);
+      setIcon(eye);
     } else {
       setType("password");
       setIcon(eyeOff);
@@ -97,7 +97,7 @@ const ChangePasswordModal = ({ userId, show, handleClose }) => {
                 onChange={handleInputChange}
               />
               <InputGroup.Text onClick={handleShowPassword}>
-                {/*eye*/}
+                <Icon icon={icon} />
               </InputGroup.Text>
             </InputGroup>
           </Form.Group>

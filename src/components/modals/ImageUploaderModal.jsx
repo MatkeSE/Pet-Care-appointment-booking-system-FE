@@ -25,7 +25,7 @@ const ImageUploaderModal = ({ userId, show, handleClose }) => {
 
   const getUser = async () => {
     try {
-      const result = getUserById(3);
+      const result = getUserById(userId);
       setUser(result.data);
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -55,7 +55,7 @@ const ImageUploaderModal = ({ userId, show, handleClose }) => {
           setShowSuccessAlert(true);
         };
       } else {
-        const response = await uploadUserPhoto(3, file);
+        const response = await uploadUserPhoto(userId, file);
         setSuccessMessage(response.data);
         window.location.reload();
         setShowSuccessAlert(true);

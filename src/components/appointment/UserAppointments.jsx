@@ -24,6 +24,7 @@ import Paginator from "../common/Paginator";
 
 const UserAppointments = ({ user, appointments: initialAppointments }) => {
   const [appointments, setAppointments] = useState(initialAppointments);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const [selectedStatus, setSelectedStatus] = useState("");
   const [filteredAppointments, setFilteredAppointments] = useState([]);
@@ -43,7 +44,7 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
     setShowErrorAlert,
   } = UseMessageAlerts();
 
-  const { recipientId } = useParams();
+  //const { recipientId } = useParams();
 
   const fetchAppointment = async (appointmentId) => {
     try {     
@@ -73,7 +74,6 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
     }
   };
 
-  
   const handleDeclineAppointment = async (appointmentId) => {
     try {
       const response = await declineAppointment(appointmentId);
@@ -105,7 +105,7 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
 
   const handleCancelAppointment = async (id) => {
     try {
-      const response = await cancelAppointment(id);    
+      const response = await cancelAppointment(id);
       setSuccessMessage(response.message);
       setShowSuccessAlert(true);
     } catch (error) {
@@ -173,13 +173,13 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
 
       <Accordion className='mt-4 mb-5'>
         {currentAppointments.map((appointment, index) => {
-          const formattedStatus = formatAppointmentStatus(appointment.status);
+          const formattedStatus = formatAppointmentStatus(appointment.status);       
 
           const statusColor = colors[formattedStatus] || colors["default"];
 
           const isWaitingForApproval =
             formattedStatus === "waiting-for-approval";
-          const isApproved = formattedStatus === "approved";
+          const isCancelled = formattedStatus === "cancelled";
 
           return (
             <Accordion.Item eventKey={index} key={index} className='mb-4'>
@@ -227,7 +227,7 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
                     <p>Reason: {appointment.reason}</p>
                   </Col>
 
-                  <Col md={8} className='mt-2'>                    
+                  <Col md={8} className='mt-2'>
                     <PetsTable
                       pets={appointment.pets}
                       onPetsUpdate={handlePetsUpdate}
@@ -236,15 +236,14 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
                       appointmentId={appointment.id}
                     />
                   </Col>
-
-                  {isApproved && (
+                  {!(isCancelled || isWaitingForApproval) && (
                     <UserInformation
                       userType={user.userType}
                       appointment={appointment}
                     />
                   )}
                 </Row>
-             
+
                 {showErrorAlert && (
                   <AlertMessage type={"danger"} message={errorMessage} />
                 )}
@@ -254,7 +253,8 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
                 )}
 
                 {user.userType === UserType.PATIENT && (
-                  <Link to={`/book-appoitnemnt/${recipientId}/new-appointmnet`}>
+                  <Link
+                    to={`/book-appoitnemnt/${appointment.veterinarianId}/new-appointmnet`}>
                     Book New Apppointment
                   </Link>
                 )}
