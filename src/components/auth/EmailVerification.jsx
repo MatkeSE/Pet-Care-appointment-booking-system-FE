@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { verifyEmail } from "./AuthService";
+import { verifyEmail, resendVerificationToken } from "./AuthService";
 import ProcessSpinner from "../common/ProcessSpinner";
 
 const EmailVerification = () => {
@@ -63,37 +63,37 @@ const EmailVerification = () => {
     }
   };
 
-//   //Resend verification to user if the initial one has expired.
-//   const handleResendToken = async () => {
-//     setIsProcessing(true);
-//     const queryParams = new URLSearchParams(location.search);
-//     const oldToken = queryParams.get("token");
-//     try {
-//       if (!oldToken) {
-//         return;
-//       }
+  //Resend verification to user if the initial one has expired.
+  const handleResendToken = async () => {
+    setIsProcessing(true);
+    const queryParams = new URLSearchParams(location.search);
+    const oldToken = queryParams.get("token");
+    try {
+      if (!oldToken) {
+        return;
+      }
 
-//       const response = await resendVerificationToken(oldToken);
-//       setVerificationMessage(response.message);
-//       setAlertType("alert-success");
-//     } catch (error) {
-//       console.log("The error : " + error);
-//       let message = "Failed to resend verification token.";
-//       if (
-//         error.response &&
-//         error.response.data &&
-//         error.response.data.message
-//       ) {
-//         message = error.response.data.message;
-//       } else if (error.message) {
-//         message = error.message;
-//       }
-//       setVerificationMessage(message);
-//       setAlertType("alert-danger");
-//     } finally {
-//       setIsProcessing(false); // Stop loading regardless of the outcome
-//     }
-//   };
+      const response = await resendVerificationToken(oldToken);
+      setVerificationMessage(response.message);
+      setAlertType("alert-success");
+    } catch (error) {
+      console.log("The error : " + error);
+      let message = "Failed to resend verification token.";
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        message = error.response.data.message;
+      } else if (error.message) {
+        message = error.message;
+      }
+      setVerificationMessage(message);
+      setAlertType("alert-danger");
+    } finally {
+      setIsProcessing(false); // Stop loading regardless of the outcome
+    }
+  };
 
   return (
     <div className='d-flex justify-content-center  mt-lg-5'>
@@ -104,11 +104,11 @@ const EmailVerification = () => {
           <div className={`alert ${alertType}`} role='alert'>
             {verificationMessage}
 
-            {/* {alertType === "alert-warning" && (
+            {alertType === "alert-warning" && (
               <button onClick={handleResendToken} className='btn btn-link'>
                 Resend Verification Link
               </button>
-            )} */}
+            )}
           </div>
         </div>
       )}

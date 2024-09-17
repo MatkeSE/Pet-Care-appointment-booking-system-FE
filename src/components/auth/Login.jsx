@@ -125,7 +125,14 @@ const Login = () => {
                   to={"/register-user"}
                   style={{ textDecoration: "none" }}>
                   Register here
-                </Link>               
+                </Link>   
+                <div className='mt-2'>
+                  <Link
+                    to={"/password-rest-request"}
+                    style={{ textDecoration: "none" }}>
+                    Forgot Password?
+                  </Link>
+                </div>            
               </div>
             </Card.Body>
           </Card>

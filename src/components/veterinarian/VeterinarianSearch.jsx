@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UseMessageAlerts from "../hooks/UseMessageAlerts";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import DatePicker from "react-datepicker";
@@ -7,8 +7,11 @@ import { format } from "date-fns";
 import AlertMessage from "../common/AlertMessage";
 import { findAvailableVeterinarians } from "./VeterinarianService";
 import { dateTimeFormatter } from "../utils/utilities";
+import { getAllSpecializations } from "./VeterinarianService";
+
 
 const VeterinarianSearch = ({ onSearchResult }) => {
+  const [specializations, setSpecializations] = useState([]);
   const [searchQuery, setSearchQuery] = useState({
     date: null,
     time: null,
@@ -43,29 +46,41 @@ const VeterinarianSearch = ({ onSearchResult }) => {
       setSearchQuery({ ...searchQuery, date: null, time: null });
     }
   };
-
+  
   const handleSearch = async (e) => {
     e.preventDefault();
-    const { date, time } = searchQuery;
-    const{formattedDate, formattedTime} = dateTimeFormatter(date, time)
 
-    let searchParams = { specialization: searchQuery.specialization };
+    const { date, time, specialization } = searchQuery;
 
-    if (searchQuery.date) {     
+    let searchParams = { specialization };
+
+    if (date && time) {
+      const { formattedDate, formattedTime } = dateTimeFormatter(date, time);
       searchParams.date = formattedDate;
-    }
-    if (searchQuery.time) {     
       searchParams.time = formattedTime;
     }
+
     try {
       const response = await findAvailableVeterinarians(searchParams);
       onSearchResult(response.data);
       setShowErrorAlert(false);
     } catch (error) {
+      console.log("The search query : " + error);
       setErrorMessage(error.response.data.message);
       setShowErrorAlert(true);
     }
   };
+
+  
+  useEffect(() => {
+    getAllSpecializations()
+      .then((data) => {
+        setSpecializations(data.data || data);
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+      });
+  }, []);
 
   const handleClearSearch = () => {
     setSearchQuery({
@@ -89,9 +104,11 @@ const VeterinarianSearch = ({ onSearchResult }) => {
             value={searchQuery.specialization}
             onChange={handleInputchange}>
             <option value=''>Select Specialization</option>
-            <option value='Surgeon'>Surgeon</option>
-            <option value='Urologist'>Urologist</option>
-            <option value='Other'>Other</option>
+            {specializations.map((specialization) => (
+              <option key={specialization} value={specialization}>
+                {specialization}
+              </option>
+            ))}
           </Form.Control>
         </Form.Group>
 
