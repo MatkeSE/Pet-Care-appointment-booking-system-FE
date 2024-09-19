@@ -5,19 +5,18 @@ import UserProfile from "./UserProfile";
 import UseMessageAlerts from "../hooks/UseMessageAlerts";
 import { getUserById, deleteUser } from "./UserService";
 import { deleteUserPhoto } from "../modals/ImageUploaderService";
-import AlertMessage from "../common/AlertMessage";
 import Review from "../review/Review";
 import UserAppointments from "../appointment/UserAppointments";
 import CustomPieChart from "../charts/CustomPieChart";
 import { formatAppointmentStatus } from "../utils/utilities";
 import NoDataAvailable from "../common/NoDataAvailable";
+import AlertMessage from "../common/AlertMessage";
 import { logout } from "../auth/AuthService";
-
 
 const UserDashboard = () => {
   const [user, setUser] = useState(null);
   const [appointments, setAppointments] = useState([]);
-   const [appointmentData, setAppointmentData] = useState([]);  
+  const [appointmentData, setAppointmentData] = useState([]);
   const [activeKey, setActiveKey] = useState(() => {
     const storedActiveKey = localStorage.getItem("activeKey");
     return storedActiveKey ? storedActiveKey : "profile";
@@ -45,7 +44,8 @@ const UserDashboard = () => {
       try {
         const data = await getUserById(userId);
         setUser(data.data);
-        setAppointments(data.data.appointments);       
+        console.log("The user data:", data.data);
+        setAppointments(data.data.appointments);
       } catch (error) {
         setErrorMessage(error.response.data.message);
         setShowErrorAlert(true);
@@ -72,10 +72,9 @@ const UserDashboard = () => {
 
       const transformedData = Object.values(statusCounts);
       setAppointmentData(transformedData);
-      setAppointments(user.appointments);     
+      setAppointments(user.appointments);
     }
   }, [user]);
-
 
   const handleRemovePhoto = async () => {
     try {
@@ -95,11 +94,10 @@ const UserDashboard = () => {
       const response = await deleteUser(userId);
       setSuccessMessage(response.message);
       setShowSuccessAlert(true);
-      setTimeout(()=>{
-      logout();
-      },5000)
+      setTimeout(() => {
+        logout();
+      }, 10000);
     } catch (error) {
-      console.error("The delete error" ,error);
       setErrorMessage(error.message);
       setShowErrorAlert(true);
     }
@@ -109,7 +107,6 @@ const UserDashboard = () => {
     setActiveKey(key);
     localStorage.setItem("activeKey", key);
   };
-
   return (
     <Container className='mt-2 user-dashboard'>
       <Tabs
@@ -117,7 +114,7 @@ const UserDashboard = () => {
         justify
         activeKey={activeKey}
         onSelect={handleTabSelect}>
-       <Tab eventKey='profile' title={<h3>Profile</h3>}>
+        <Tab eventKey='profile' title={<h3>Profile</h3>}>
           <Col>
             {showErrorAlert && (
               <AlertMessage type={"danger"} message={errorMessage} />
@@ -179,7 +176,11 @@ const UserDashboard = () => {
                 <Col>
                   {user && user.reviews && user.reviews.length > 0 ? (
                     user.reviews.map((review, index) => (
-                      <Review key={index} review={review} />
+                      <Review
+                        key={index}
+                        review={review}
+                        userType={user.userType}
+                      />
                     ))
                   ) : (
                     <NoDataAvailable dataType={"review data"} />

@@ -179,7 +179,7 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
 
           const isWaitingForApproval =
             formattedStatus === "waiting-for-approval";
-          const isCancelled = formattedStatus === "cancelled";
+          const isApproved = formattedStatus === "approved";
 
           return (
             <Accordion.Item eventKey={index} key={index} className='mb-4'>
@@ -236,7 +236,7 @@ const UserAppointments = ({ user, appointments: initialAppointments }) => {
                       appointmentId={appointment.id}
                     />
                   </Col>
-                  {!(isCancelled || isWaitingForApproval) && (
+                  {!(isApproved || isWaitingForApproval) && (
                     <UserInformation
                       userType={user.userType}
                       appointment={appointment}
